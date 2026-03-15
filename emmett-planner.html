@@ -1,0 +1,1310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Emmett's College Launch Planner</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --emmett: #2563EB;
+    --emmett-light: #DBEAFE;
+    --emmett-mid: #93C5FD;
+    --mom: #EA580C;
+    --mom-light: #FFEDD5;
+    --mom-mid: #FDBA74;
+    --mark: #16A34A;
+    --mark-light: #DCFCE7;
+    --mark-mid: #86EFAC;
+    --everyone: #7C3AED;
+    --everyone-light: #EDE9FE;
+    --everyone-mid: #C4B5FD;
+    --gap: #0891B2;
+    --gap-light: #CFFAFE;
+    --done: #6B7280;
+    --bg: #FAFAF8;
+    --surface: #FFFFFF;
+    --border: #E5E7EB;
+    --text: #111827;
+    --text-muted: #6B7280;
+    --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
+    --shadow-md: 0 4px 6px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.05);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 15px;
+    line-height: 1.5;
+  }
+
+  /* ── HEADER ── */
+  .site-header {
+    background: var(--text);
+    color: white;
+    padding: 28px 32px 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  .site-header::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 200px; height: 200px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.04);
+  }
+  .header-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .header-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 28px;
+    letter-spacing: -0.5px;
+    line-height: 1.1;
+  }
+  .header-subtitle {
+    font-size: 13px;
+    color: rgba(255,255,255,0.55);
+    margin-top: 4px;
+    letter-spacing: 0.3px;
+  }
+  .countdown-badge {
+    background: var(--mom);
+    color: white;
+    padding: 10px 18px;
+    border-radius: 8px;
+    text-align: center;
+    min-width: 180px;
+  }
+  .countdown-number {
+    font-family: 'DM Serif Display', serif;
+    font-size: 32px;
+    line-height: 1;
+  }
+  .countdown-label {
+    font-size: 12px;
+    opacity: 0.9;
+    margin-top: 2px;
+  }
+  .countdown-sub {
+    font-size: 11px;
+    opacity: 0.7;
+    margin-top: 1px;
+  }
+
+  /* ── LEGEND ── */
+  .legend {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-top: 18px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 12px;
+    color: rgba(255,255,255,0.75);
+  }
+  .legend-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* ── MAIN LAYOUT ── */
+  .main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 28px 24px;
+    display: grid;
+    grid-template-columns: 1fr 280px;
+    gap: 24px;
+    align-items: start;
+  }
+
+  @media (max-width: 900px) {
+    .main { grid-template-columns: 1fr; }
+  }
+
+  /* ── SECTION TITLES ── */
+  .section-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+  }
+
+  /* ── NOW CARD ── */
+  .now-card {
+    background: var(--surface);
+    border-radius: 12px;
+    border: 2px solid var(--mom);
+    box-shadow: var(--shadow-md);
+    overflow: hidden;
+    margin-bottom: 24px;
+  }
+  .now-card-header {
+    background: var(--mom);
+    color: white;
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .now-card-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 18px;
+  }
+  .now-card-meta {
+    font-size: 12px;
+    opacity: 0.85;
+  }
+  .now-tasks {
+    padding: 16px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  /* ── TASK ITEM ── */
+  .task {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    cursor: pointer;
+    transition: all 0.15s ease;
+    user-select: none;
+  }
+  .task:hover { border-color: #D1D5DB; background: #F9FAFB; }
+  .task.done {
+    opacity: 0.5;
+    background: #F3F4F6;
+  }
+  .task.done .task-text { text-decoration: line-through; }
+
+  .task-checkbox {
+    width: 18px; height: 18px;
+    border-radius: 4px;
+    border: 2px solid var(--border);
+    flex-shrink: 0;
+    margin-top: 1px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+  }
+  .task.done .task-checkbox {
+    background: var(--done);
+    border-color: var(--done);
+  }
+  .task.done .task-checkbox::after {
+    content: '✓';
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+  }
+
+  .task-owner {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 5px;
+  }
+  .task-text {
+    font-size: 14px;
+    flex: 1;
+    line-height: 1.4;
+  }
+  .task-urgent {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--mom);
+    background: var(--mom-light);
+    padding: 1px 7px;
+    border-radius: 20px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    align-self: flex-start;
+    margin-top: 2px;
+  }
+
+  /* owner color variants */
+  .owner-emmett .task-checkbox { border-color: var(--emmett); }
+  .owner-emmett.done .task-checkbox { background: var(--emmett); border-color: var(--emmett); }
+  .owner-mom .task-checkbox { border-color: var(--mom); }
+  .owner-mom.done .task-checkbox { background: var(--mom); border-color: var(--mom); }
+  .owner-mark .task-checkbox { border-color: var(--mark); }
+  .owner-mark.done .task-checkbox { background: var(--mark); border-color: var(--mark); }
+  .owner-everyone .task-checkbox { border-color: var(--everyone); }
+  .owner-everyone.done .task-checkbox { background: var(--everyone); border-color: var(--everyone); }
+
+  /* ── FILTER TABS ── */
+  .filter-tabs {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+  .filter-tab {
+    padding: 5px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    border: 1.5px solid var(--border);
+    background: white;
+    cursor: pointer;
+    transition: all 0.15s;
+    color: var(--text-muted);
+  }
+  .filter-tab:hover { border-color: #9CA3AF; color: var(--text); }
+  .filter-tab.active { background: var(--text); color: white; border-color: var(--text); }
+  .filter-tab.tab-emmett.active { background: var(--emmett); border-color: var(--emmett); }
+  .filter-tab.tab-mom.active { background: var(--mom); border-color: var(--mom); }
+  .filter-tab.tab-mark.active { background: var(--mark); border-color: var(--mark); }
+
+  /* ── TIMELINE ── */
+  .timeline-card {
+    background: var(--surface);
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+  .timeline-header {
+    padding: 16px 20px 12px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .timeline-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 18px;
+  }
+
+  .month-block {
+    border-bottom: 1px solid var(--border);
+    overflow: hidden;
+    transition: all 0.2s;
+  }
+  .month-block:last-child { border-bottom: none; }
+
+  .month-header {
+    display: flex;
+    align-items: center;
+    padding: 12px 20px;
+    cursor: pointer;
+    gap: 12px;
+    transition: background 0.15s;
+  }
+  .month-header:hover { background: #F9FAFB; }
+
+  .month-label {
+    font-weight: 600;
+    font-size: 14px;
+    min-width: 90px;
+  }
+  .month-current .month-label { color: var(--mom); }
+  .month-past .month-label { color: var(--text-muted); }
+
+  .month-tags {
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+    flex: 1;
+  }
+  .month-tag {
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-weight: 500;
+  }
+  .tag-test { background: #DBEAFE; color: #1D4ED8; }
+  .tag-college { background: #DCFCE7; color: #15803D; }
+  .tag-resume { background: #EDE9FE; color: #6D28D9; }
+  .tag-aid { background: #FEF9C3; color: #A16207; }
+  .tag-gap { background: #CFFAFE; color: #0E7490; }
+  .tag-urgent { background: #FEE2E2; color: #B91C1C; }
+
+  .month-chevron {
+    font-size: 12px;
+    color: var(--text-muted);
+    transition: transform 0.2s;
+  }
+  .month-block.open .month-chevron { transform: rotate(90deg); }
+
+  .month-content {
+    display: none;
+    padding: 0 20px 14px;
+  }
+  .month-block.open .month-content { display: block; }
+
+  .lane-section { margin-bottom: 12px; }
+  .lane-title {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    padding-bottom: 4px;
+    border-bottom: 1px solid var(--border);
+  }
+  .lane-test { color: #1D4ED8; }
+  .lane-college { color: #15803D; }
+  .lane-resume { color: #6D28D9; }
+  .lane-aid { color: #A16207; }
+  .lane-gap { color: #0E7490; }
+
+  .timeline-task {
+    font-size: 13px;
+    padding: 5px 0;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    color: #374151;
+  }
+  .timeline-task-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 5px;
+  }
+  .month-current-badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--mom);
+    background: var(--mom-light);
+    padding: 1px 8px;
+    border-radius: 20px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-left: 6px;
+    vertical-align: middle;
+  }
+
+  /* ── SIDEBAR ── */
+  .sidebar { display: flex; flex-direction: column; gap: 20px; }
+
+  .sidebar-card {
+    background: var(--surface);
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+  .sidebar-card-header {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    font-family: 'DM Serif Display', serif;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .sidebar-card-body { padding: 14px 16px; }
+
+  .reminder-item {
+    font-size: 13px;
+    padding: 8px 0;
+    border-bottom: 1px solid #F3F4F6;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    line-height: 1.4;
+  }
+  .reminder-item:last-child { border-bottom: none; padding-bottom: 0; }
+  .reminder-icon { flex-shrink: 0; font-size: 14px; margin-top: 1px; }
+  .reminder-date {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--mom);
+    display: block;
+    margin-bottom: 1px;
+  }
+
+  .text-template {
+    background: #F3F4F6;
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 12px;
+    color: #374151;
+    margin-bottom: 8px;
+    border-left: 3px solid var(--emmett);
+    line-height: 1.5;
+    font-style: italic;
+  }
+  .text-template.to-mark { border-left-color: var(--mark); }
+  .text-to {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 3px;
+    color: var(--text-muted);
+    font-style: normal;
+  }
+
+  .score-tracker {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .score-box {
+    background: #F9FAFB;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px;
+    text-align: center;
+  }
+  .score-box-label {
+    font-size: 11px;
+    color: var(--text-muted);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .score-box-value {
+    font-family: 'DM Serif Display', serif;
+    font-size: 22px;
+    margin-top: 2px;
+    color: var(--text);
+  }
+  .score-box-value.pending {
+    font-size: 14px;
+    color: var(--text-muted);
+    margin-top: 6px;
+  }
+  .score-box-sub {
+    font-size: 10px;
+    color: var(--text-muted);
+    margin-top: 1px;
+  }
+
+  .progress-bar-wrap {
+    margin-top: 12px;
+  }
+  .progress-bar-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+  }
+  .progress-bar {
+    height: 6px;
+    background: #E5E7EB;
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: var(--mom);
+    border-radius: 3px;
+    transition: width 0.4s ease;
+  }
+
+  /* ── PHASE DIVIDER ── */
+  .phase-divider {
+    padding: 10px 20px;
+    background: #F3F4F6;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* ── FOOTER ── */
+  .site-footer {
+    text-align: center;
+    padding: 24px;
+    font-size: 12px;
+    color: var(--text-muted);
+    border-top: 1px solid var(--border);
+    margin-top: 16px;
+  }
+
+  /* ── PRINT ── */
+  @media print {
+    .site-header { background: #111 !important; -webkit-print-color-adjust: exact; }
+    .now-card { break-inside: avoid; }
+    .filter-tabs { display: none; }
+    .sidebar { display: none; }
+    .month-content { display: block !important; }
+    .main { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── HEADER ── -->
+<header class="site-header">
+  <div class="header-top">
+    <div>
+      <div class="header-title">Emmett's College Launch Planner</div>
+      <div class="header-subtitle">Class of 2027 · Walsh Family Command</div>
+    </div>
+    <div class="countdown-badge">
+      <div class="countdown-number" id="daysLeft">—</div>
+      <div class="countdown-label" id="countdownLabel">days left in March</div>
+      <div class="countdown-sub" id="countdownSub">Complete the tasks below ↓</div>
+    </div>
+  </div>
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:var(--emmett)"></div> Emmett</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--mom)"></div> Mom</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--mark)"></div> Mark</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--everyone)"></div> Everyone</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--gap)"></div> Gap Year Path</div>
+  </div>
+</header>
+
+<!-- ── MAIN ── -->
+<div class="main">
+  <div class="content-col">
+
+    <!-- DO THIS NOW -->
+    <div class="section-label">Do This Now — March 2026</div>
+    <div class="now-card">
+      <div class="now-card-header">
+        <div class="now-card-title">🎯 March Tasks</div>
+        <div class="now-card-meta" id="progressText">0 of 9 complete</div>
+      </div>
+
+      <!-- Filter tabs -->
+      <div style="padding: 12px 20px 0;">
+        <div class="filter-tabs">
+          <div class="filter-tab active" onclick="filterTasks('all', this)">All</div>
+          <div class="filter-tab tab-emmett" onclick="filterTasks('emmett', this)">Emmett only</div>
+          <div class="filter-tab tab-mom" onclick="filterTasks('mom', this)">Mom only</div>
+          <div class="filter-tab tab-mark" onclick="filterTasks('mark', this)">Mark only</div>
+        </div>
+      </div>
+
+      <div class="now-tasks" id="taskList">
+
+        <div class="task owner-emmett" data-owner="emmett" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-owner" style="background:var(--emmett)"></div>
+          <div class="task-text"><strong>Log in and check ACT score today.</strong> Go to act.org → My ACT → scores. Screenshot it and text to Mom.</div>
+          <div class="task-urgent">TODAY</div>
+        </div>
+
+        <div class="task owner-emmett" data-owner="emmett" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-owner" style="background:var(--emmett)"></div>
+          <div class="task-text"><strong>Follow up with guidance counselor</strong> about Boys State — she suggested other contacts you need to speak to. Check your email, then go see her in person if needed.</div>
+          <div class="task-urgent">THIS WEEK</div>
+        </div>
+
+        <div class="task owner-emmett" data-owner="emmett" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-owner" style="background:var(--emmett)"></div>
+          <div class="task-text">Check your email and <strong>look for guidance counselor's reply</strong> about Boys State — it's been a week. Then act on it same day.</div>
+        </div>
+
+        <div class="task owner-mom" data-owner="mom" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-owner" style="background:var(--mom)"></div>
+          <div class="task-text"><strong>Pull Emmett's current GPA</strong> from school portal. Note it somewhere in this planner. We need to know what we're working with.</div>
+          <div class="task-urgent">THIS WEEK</div>
+        </div>
+
+        <div class="task owner-mom" data-owner="mom" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-owner" style="background:var(--mom)"></div>
+          <div class="task-text"><strong>Once ACT score is in:</strong> compare SAT PSAT (1430) vs ACT. Decide which test to prioritize for retakes. (SAT 2nd attempt: June 6 · ACT 2nd attempt: July 11)</div>
+        </div>
+
+        <div class="task owner-mark" data-owner="mark" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-owner" style="background:var(--mark)"></div>
+          <div class="task-text"><strong>Mark: review this planner</strong> and add your name to any tasks you want to own. Text Mom to confirm you've seen it.</div>
+        </div>
+
+        <div class="task owner-everyone" data-owner="everyone" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-owner" style="background:var(--everyone)"></div>
+          <div class="task-text"><strong>Family: have a 20-minute conversation</strong> about both paths — traditional college AND gap year. No pressure, just open. Put it on the calendar.</div>
+        </div>
+
+        <div class="task owner-emmett" data-owner="emmett" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-owner" style="background:var(--emmett)"></div>
+          <div class="task-text">Start a simple <strong>list of 5 colleges</strong> you've actually heard of and think sound interesting. No pressure — first draft only. Put it in Notes on your phone.</div>
+        </div>
+
+        <div class="task owner-mom" data-owner="mom" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-owner" style="background:var(--mom)"></div>
+          <div class="task-text"><strong>Register Emmett for SAT test prep</strong> — even light, 2x/week habit. Khan Academy SAT is free and works.</div>
+        </div>
+
+      </div>
+
+      <!-- Progress bar -->
+      <div style="padding: 4px 20px 16px;">
+        <div class="progress-bar-wrap">
+          <div class="progress-bar-label">
+            <span>March progress</span>
+            <span id="progressPct">0%</span>
+          </div>
+          <div class="progress-bar"><div class="progress-bar-fill" id="progressFill" style="width:0%"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 18-MONTH TIMELINE -->
+    <div class="section-label" style="margin-top:8px;">18-Month Timeline — March 2026 → Sept 2027</div>
+    <div class="timeline-card">
+      <div class="timeline-header">
+        <div class="timeline-title">The Full Map</div>
+        <div style="font-size:12px;color:var(--text-muted);">Click any month to expand</div>
+      </div>
+
+      <div class="phase-divider">Phase 1 — Explore & Build (Mar–Jul 2026)</div>
+
+      <!-- MARCH -->
+      <div class="month-block open month-current" id="block-mar">
+        <div class="month-header" onclick="toggleMonth('block-mar')">
+          <div class="month-label">March 2026 <span class="month-current-badge">NOW</span></div>
+          <div class="month-tags">
+            <span class="month-tag tag-test">Test Scores</span>
+            <span class="month-tag tag-resume">Boys State</span>
+            <span class="month-tag tag-urgent">GPA Check</span>
+          </div>
+          <div class="month-chevron">▶</div>
+        </div>
+        <div class="month-content">
+          <div class="lane-section">
+            <div class="lane-title lane-test">🎯 Test Prep</div>
+            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--emmett)"></div>Get ACT score (act.org) — assess vs PSAT 1430</div>
+            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--emmett)"></div>SAT taken 3/14 — score released by 3/28</div>
+            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--mom)"></div>Compare both scores, decide retake strategy</div>
+            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--emmett)"></div>Start Khan Academy SAT prep habit (2x/week, 20 min)</div>
+          </div>
+          <div class="lane-section">
+            <div class="lane-title lane-resume">🌟 Resume & Activities</div>
+            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--emmett)"></div>Follow up with guidance counselor re: Boys State contacts</div>
+            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--emmett)"></div>Research what Boys State week actually looks like</div>
+          </div>
+          <div class="lane-section">
+            <div class="lane-title lane-college">🏫 College Research</div>
+            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--mom)"></div>Pull current GPA from school portal</div>
+            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--emmett)"></div>Draft rough list of 5 colleges that sound interesting</div>
+          </div>
+          <div class="lane-section">
+            <div class="lane-title lane-gap">🔀 Gap Year Path</div>
+            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--everyone)"></div>Family conversation: explore both paths openly, no pressure</div>
+            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--emmett)"></div>Emmett: what does an ideal gap year look like to you?</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- APRIL -->
+      <div class="month-block" id="block-apr">
+        <div class="month-header" onclick="toggleMonth('block-apr')">
+          <div class="month-label">April 2026</div>
+          <div class="month-tags">
+            <span class="month-tag tag-test">Retake Plan</span>
+            <span class="month-tag tag-college">College List</span>
+            <span class="month-tag tag-resume">Boys State</span>
+          </div>
+          <div class="month-chevron">▶</div>
+        </div>
+        <div class="month-content">
+          <div class="lane-section">
+            <div class="lane-title lane-test">🎯 Test Prep</div>
+            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--mom)"></div>Decide: retake SAT (June 6, reg by May 22) and/or ACT (July 11)?</div>
+            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--emmett)"></div>Continue 2x/week test prep habit</div>
+            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--mom)"></div>Confirm 504 accommodations are approved for SAT + ACT</div>
+          </div>
+          <div class="lane-section">
+            <div class="lane-title lane-college">🏫 College Research</div>
+            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--emmett)"></div>Research 3 colleges in depth — what majors, vibe, size</div>
+            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--mom)"></div>Plan spring campus visit — 1 or 2 nearby schools</div>
+            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--everyone)"></div>Start honest conversation about GPA reality + college fit</div>
+          </div>
+          <div class="lane-section">
+            <div class="lane-title lane-resume">🌟 Resume & Activities</div>
+            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--emmett)"></div>Boys State: complete any follow-up steps from guidance counselor</div>
+            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--emmett)"></div>Start a simple activities list — everything, even small things</div>
+          </div>
+          <div class="lane-section">
+            <div class="lane-title lane-gap">🔀 Gap Year Path</div>
+            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--emmett)"></div>Research: AmeriCorps, City Year, gap year programs, CC options</div>
+            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--mom)"></div>Look into MA community college transfer pathways</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MAY -->
+      <div class="month-block" id="block-may">
+        <div class="month-header" onclick="toggleMonth('block-may')">
+          <div class="month-label">May 2026</div>
+          <div class="month-tags">
+            <span class="month-tag tag-test">⚠️ SAT Reg by 5/22</span>
+            <span class="month-tag tag-college">Campus Visits</span>
+          </div>
+          <div class="month-chevron">▶</div>
+        </div>
+        <div class="month-content">
+          <div class="lane-section">
+            <div class="lane-title lane-test">🎯 Test Prep</div>
+            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--mom)"></div><strong>Register for SAT June 6 by May 22</strong> (if retaking)</div>
+            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--emmett)"></div>Ramp up prep — 3x/week leading up to June SAT</div>
+          </div>
+          <div class="lane-section">
+            <div class="lane-title lane-college">🏫 College Research</div>
+            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--everyone)"></div>Campus visit(s) — take notes, not just vibes</div>
+            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--emmett)"></div>College list growing to 8–12 schools across reach/match/safety</div>
+            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--mom)"></div>Research admission stats for schools on list vs. Emmett's profile</div>
+          </div>
+          <div class="lane-section">
+            <div class="lane-title lane-resume">🌟 Resume & Activities</div>
+            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--emmett)"></div>Boys State — if selected, prep begins</div>
+            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--emmett)"></div>Finish junior year strong — every grade counts now</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- JUNE -->
+      <div class="month-block" id="block-jun">
+        <div class="month-header" onclick="toggleMonth('block-jun')">
+          <div class="month-label">June 2026</div>
+          <div class="month-tags">
+            <span class="month-tag tag-test">2nd SAT 6/6 · ACT 6/13</span>
+            <span class="month-tag tag-resume">Boys State</span>
+          </div>
+          <div class="month-chevron">▶</div>
+        </div>
+        <div class="month-content">
+          <div class="lane-section">
+            <div class="lane-title lane-test">🎯 Test Prep</div>
+            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--emmett)"></div><strong>2nd SAT: June 6</strong> — go in prepared</div>
+            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--emmett)"></div>ACT Option 2: June 13 (note: one week apart — demanding)</div>
+            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--mom)"></div>Scores in late June — compare both tests, decide if 3rd attempt needed</div>
+          </div>
+          <div class="lane-section">
+            <div class="lane-title lane-resume">🌟 Resume & Activities</div>
+            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--emmett)"></div>Boys State program (if selected) — lean in, this is the experience</div>
+            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--emmett)"></div>Start brainstorming college essay topics — no writing yet, just ideas</div>
+          </div>
+          <div class="lane-section">
+            <div class="lane-title lane-college">🏫 College Research</div>
+            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--emmett)"></div>Research summer programs in areas of interest (economics, global studies, policy)</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- JULY -->
+      <div class="month-block" id="block-jul">
+        <div class="month-header" onclick="toggleMonth('block-jul')">
+          <div class="month-label">July 2026</div>
+          <div class="month-tags">
+            <span class="month-tag tag-test">ACT 7/11 (reg by 6/5)</span>
+            <span class="month-tag tag-college">College List Final</span>
+            <span class="month-tag tag-resume">Essay Brainstorm</span>
+          </div>
+          <div class="month-chevron">▶</div>
+        </div>
+        <div class="month-content">
+          <div class="lane-section">
+            <div class="lane-title lane-test">🎯 Test Prep</div>
+            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--mom)"></div><strong>Register for ACT July 11 by June 5</strong> (if doing 2nd ACT)</div>
+            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--emmett)"></div>2nd ACT: July 11 — done regardless of scores</div>
+            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--mom)"></div>Assess all scores — finalize test strategy, plan Aug/Oct SAT if needed</div>
+          </div>
+          <div class="lane-section">
+            <div class="lane-title lane-college">🏫 College Research</div>
+            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--emmett)"></div>Finalize college list: 8–12 schools, honest reach/match/safety</div>
+            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--everyone)"></div>Family: review list together — discuss affordability, fit, realistic outcomes</div>
+            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--mom)"></div>Research financial aid requirements for schools on list</div>
+          </div>
+          <div class="lane-section">
+            <div class="lane-title lane-resume">🌟 Resume & Activities</div>
+            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--emmett)"></div>Draft Common App activities list — 10 slots, use them wisely</div>
+            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--emmett)"></div>Start drafting "brag sheet" for teacher rec requests</div>
+          </div>
+          <div class="lane-section">
+            <div class="lane-title lane-gap">🔀 Gap Year Path</div>
+            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--emmett)"></div>Gap year research: Emmett identifies top 2–3 options that interest him</div>
+            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--mom)"></div>Research gap year program deadlines — many are fall of senior year</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="phase-divider">Phase 2 — Apply (Aug–Dec 2026)</div>
+
+      <!-- AUGUST -->
+      <div class="month-block" id="block-aug26">
+        <div class="month-header" onclick="toggleMonth('block-aug26')">
+          <div class="month-label">August 2026</div>
+          <div class="month-tags">
+            <span class="month-tag tag-college">Common App Opens</span>
+            <span class="month-tag tag-resume">Essays Begin</span>
+          </div>
+          <div class="month-chevron">▶</div>
+        </div>
+        <div class="month-content">
+          <div class="lane-section">
+            <div class="lane-title lane-test">🎯 Test Prep</div>
+            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--emmett)"></div>SAT retake if needed — August test date available</div>
+          </div>
+          <div class="lane-section">
+            <div class="lane-title lane-college">🏫 College Research</div>
+            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--emmett)"></div>Create Common App account — fill in basics</div>
+            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--emmett)"></div>Research EA/ED deadlines for schools on list</div>
+            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--mark)"></div>Mark: review college list with Emmett — honest conversation</div>
+          </div>
+          <div class="lane-section">
+            <div class="lane-title lane-resume">🌟 Resume & Activities</div>
+            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--emmett)"></div>Draft main Common App essay — first attempt, messy is fine</div>
+            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--emmett)"></div>Request teacher recommendations — ask early, give them the brag sheet</div>
+            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--mom)"></div>Confirm transcript request process with school</div>
+          </div>
+          <div class="lane-section">
+            <div class="lane-title lane-gap">🔀 Gap Year Path</div>
+            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--emmett)"></div>Apply to gap year programs with fall deadlines (AmeriCorps, City Year)</div>
+            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--mom)"></div>Research "defer enrollment" policies at target schools — many allow it</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SEPTEMBER -->
+      <div class="month-block" id="block-sep26">
+        <div class="month-header" onclick="toggleMonth('block-sep26')">
+          <div class="month-label">September 2026</div>
+          <div class="month-tags">
+            <span class="month-tag tag-resume">Essay Polish</span>
+            <span class="month-tag tag-college">Senior Year GPA</span>
+          </div>
+          <div class="month-chevron">▶</div>
+        </div>
+        <div class="month-content">
+          <div class="lane-section">
+            <div class="lane-title lane-resume">🌟 Resume & Activities</div>
+            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--emmett)"></div>Essay drafts — get feedback from Mom, English teacher, or counselor</div>
+            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--emmett)"></div>Supplemental essay research for each school — know what's required</div>
+            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--mom)"></div>Check that rec teachers are on track</div>
+          </div>
+          <div class="lane-section">
+            <div class="lane-title lane-college">🏫 College Research</div>
+            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--emmett)"></div>Senior year starts — GPA matters, first semester is in play for applications</div>
+            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--emmett)"></div>Begin filling in EA/ED applications</div>
+          </div>
+          <div class="lane-section">
+            <div class="lane-title lane-test">🎯 Test Prep</div>
+            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--emmett)"></div>Final SAT option: October test if still needed</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- OCTOBER -->
+      <div class="month-block" id="block-oct26">
+        <div class="month-header" onclick="toggleMonth('block-oct26')">
+          <div class="month-label">October 2026</div>
+          <div class="month-tags">
+            <span class="month-tag tag-college">EA/ED Apps Due</span>
+            <span class="month-tag tag-aid">⚠️ FAFSA Opens Oct 1</span>
+          </div>
+          <div class="month-chevron">▶</div>
+        </div>
+        <div class="month-content">
+          <div class="lane-section">
+            <div class="lane-title lane-college">🏫 College Research</div>
+            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--emmett)"></div>Submit EA/ED applications — double-check everything before hitting send</div>
+            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--mom)"></div>Confirm transcripts and test scores sent to each school</div>
+          </div>
+          <div class="lane-section">
+            <div class="lane-title lane-aid">💰 Financial Aid</div>
+            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--mom)"></div><strong>FAFSA opens October 1 — file immediately.</strong> Earlier = more aid.</div>
+            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--mark)"></div>Mark: gather tax documents needed for FAFSA</div>
+            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--mom)"></div>Research CSS Profile requirements — required by many private schools</div>
+          </div>
+          <div class="lane-section">
+            <div class="lane-title lane-gap">🔀 Gap Year Path</div>
+            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--emmett)"></div>Research MA community colleges — deadlines, programs, transfer agreements</div>
+            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--mom)"></div>Look into MassTransfer program — guaranteed transfer pathways to UMass system</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- NOV-DEC -->
+      <div class="month-block" id="block-nov26">
+        <div class="month-header" onclick="toggleMonth('block-nov26')">
+          <div class="month-label">Nov–Dec 2026</div>
+          <div class="month-tags">
+            <span class="month-tag tag-college">RD Apps Due</span>
+            <span class="month-tag tag-aid">CSS Profile</span>
+          </div>
+          <div class="month-chevron">▶</div>
+        </div>
+        <div class="month-content">
+          <div class="lane-section">
+            <div class="lane-title lane-college">🏫 College Research</div>
+            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--emmett)"></div>Submit all Regular Decision applications (most due Jan 1)</div>
+            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--mom)"></div>Confirm all materials received — follow up with every school</div>
+            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--emmett)"></div>Take a real mental health break after submitting — you earned it</div>
+          </div>
+          <div class="lane-section">
+            <div class="lane-title lane-aid">💰 Financial Aid</div>
+            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--mom)"></div>File CSS Profile if any schools require it</div>
+            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--mom)"></div>Verify FAFSA submitted and confirmed at all schools</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="phase-divider">Phase 3 — Decide & Launch (Jan 2027 → Sept 2027)</div>
+
+      <!-- JAN-FEB 2027 -->
+      <div class="month-block" id="block-jan27">
+        <div class="month-header" onclick="toggleMonth('block-jan27')">
+          <div class="month-label">Jan–Feb 2027</div>
+          <div class="month-tags">
+            <span class="month-tag tag-college">EA Decisions In</span>
+            <span class="month-tag tag-aid">Aid Packages</span>
+          </div>
+          <div class="month-chevron">▶</div>
+        </div>
+        <div class="month-content">
+          <div class="lane-section">
+            <div class="lane-title lane-college">🏫 College Research</div>
+            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--everyone)"></div>EA decisions arrive — celebrate no matter what, this is progress</div>
+            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--emmett)"></div>Attend admitted student events for EA acceptances</div>
+          </div>
+          <div class="lane-section">
+            <div class="lane-title lane-aid">💰 Financial Aid</div>
+            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--everyone)"></div>Review financial aid packages as they arrive — compare apples to apples</div>
+            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--mom)"></div>Appeal aid packages if needed — it's allowed, do it professionally</div>
+          </div>
+          <div class="lane-section">
+            <div class="lane-title lane-gap">🔀 Gap Year Path</div>
+            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--emmett)"></div>CC applications typically due Feb–Mar — apply if gap year path is live</div>
+            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--mom)"></div>Review gap year program responses — AmeriCorps, City Year, etc.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MAR-APR 2027 -->
+      <div class="month-block" id="block-mar27">
+        <div class="month-header" onclick="toggleMonth('block-mar27')">
+          <div class="month-label">Mar–Apr 2027</div>
+          <div class="month-tags">
+            <span class="month-tag tag-college">RD Decisions In</span>
+            <span class="month-tag tag-college">Campus Revisits</span>
+          </div>
+          <div class="month-chevron">▶</div>
+        </div>
+        <div class="month-content">
+          <div class="lane-section">
+            <div class="lane-title lane-college">🏫 College Research</div>
+            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--everyone)"></div>RD decisions arrive — full picture now visible</div>
+            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--emmett)"></div>Revisit top 2–3 schools — accepted student days are worth it</div>
+            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--everyone)"></div>Family: compare offers, fit, cost — real talk, no pressure</div>
+          </div>
+          <div class="lane-section">
+            <div class="lane-title lane-aid">💰 Financial Aid</div>
+            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--mom)"></div>Compare net cost of each school (not sticker price)</div>
+            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--mom)"></div>Final aid appeals if needed</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MAY 2027 -->
+      <div class="month-block" id="block-may27">
+        <div class="month-header" onclick="toggleMonth('block-may27')">
+          <div class="month-label">May 2027</div>
+          <div class="month-tags">
+            <span class="month-tag tag-urgent">⚠️ Decision Day May 1</span>
+          </div>
+          <div class="month-chevron">▶</div>
+        </div>
+        <div class="month-content">
+          <div class="lane-section">
+            <div class="lane-title lane-college">🏫 College Path</div>
+            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--emmett)"></div><strong>May 1: Commit to college</strong> — submit deposit, accept financial aid</div>
+            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--emmett)"></div>Decline other offers respectfully — frees up spots for waitlisted students</div>
+            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--emmett)"></div>Join incoming student groups, start housing process</div>
+          </div>
+          <div class="lane-section">
+            <div class="lane-title lane-gap">🔀 Gap Year Path</div>
+            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--emmett)"></div><strong>OR: Commit to gap year plan</strong> — enroll in CC or launch program</div>
+            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--mom)"></div>If deferring college offer, submit deferral request by school's deadline</div>
+            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--everyone)"></div>Celebrate. Both paths lead somewhere real.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- JUNE-SEPT 2027 -->
+      <div class="month-block" id="block-jun27">
+        <div class="month-header" onclick="toggleMonth('block-jun27')">
+          <div class="month-label">Jun–Sept 2027</div>
+          <div class="month-tags">
+            <span class="month-tag tag-college">Launch 🚀</span>
+          </div>
+          <div class="month-chevron">▶</div>
+        </div>
+        <div class="month-content">
+          <div class="lane-section">
+            <div class="lane-title lane-college">🏫 College Path</div>
+            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--emmett)"></div>Housing forms, orientation registration, roommate matching</div>
+            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--emmett)"></div>Thank-you notes to teachers and mentors who wrote recs</div>
+            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--everyone)"></div>Move-in day — the whole thing was worth it</div>
+          </div>
+          <div class="lane-section">
+            <div class="lane-title lane-gap">🔀 Gap Year Path</div>
+            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--emmett)"></div>Gap year begins — show up, engage, build something real</div>
+            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--mom)"></div>Check in monthly — not to manage, just to stay connected</div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- end timeline-card -->
+  </div><!-- end content-col -->
+
+  <!-- ── SIDEBAR ── -->
+  <div class="sidebar">
+
+    <!-- SCORES -->
+    <div class="sidebar-card">
+      <div class="sidebar-card-header">📊 Emmett's Numbers</div>
+      <div class="sidebar-card-body">
+        <div class="score-tracker">
+          <div class="score-box">
+            <div class="score-box-label">PSAT</div>
+            <div class="score-box-value">1430</div>
+            <div class="score-box-sub">No prep · 504</div>
+          </div>
+          <div class="score-box">
+            <div class="score-box-label">SAT</div>
+            <div class="score-box-value pending">Taken 3/14<br>Score ~3/28</div>
+          </div>
+          <div class="score-box">
+            <div class="score-box-label">ACT</div>
+            <div class="score-box-value pending">⚠️ Check<br>Today</div>
+          </div>
+          <div class="score-box">
+            <div class="score-box-label">GPA</div>
+            <div class="score-box-value pending">Pull from<br>portal</div>
+          </div>
+        </div>
+        <div style="margin-top:12px;font-size:12px;color:var(--text-muted);line-height:1.5;">
+          💡 1430 PSAT with zero prep + 504 time = strong foundation. Realistic SAT target with prep: <strong>1500+</strong>
+        </div>
+      </div>
+    </div>
+
+    <!-- KEY DEADLINES -->
+    <div class="sidebar-card">
+      <div class="sidebar-card-header">⚠️ Hard Deadlines</div>
+      <div class="sidebar-card-body">
+        <div class="reminder-item">
+          <div class="reminder-icon">📝</div>
+          <div>
+            <span class="reminder-date">May 22, 2026</span>
+            Register for SAT June 6 (if retaking)
+          </div>
+        </div>
+        <div class="reminder-item">
+          <div class="reminder-icon">📝</div>
+          <div>
+            <span class="reminder-date">June 5, 2026</span>
+            Register for ACT July 11
+          </div>
+        </div>
+        <div class="reminder-item">
+          <div class="reminder-icon">🎯</div>
+          <div>
+            <span class="reminder-date">June 6, 2026</span>
+            2nd SAT test date
+          </div>
+        </div>
+        <div class="reminder-item">
+          <div class="reminder-icon">🎯</div>
+          <div>
+            <span class="reminder-date">July 11, 2026</span>
+            2nd ACT test date
+          </div>
+        </div>
+        <div class="reminder-item">
+          <div class="reminder-icon">💰</div>
+          <div>
+            <span class="reminder-date">October 1, 2026</span>
+            FAFSA opens — file same day
+          </div>
+        </div>
+        <div class="reminder-item">
+          <div class="reminder-icon">🏫</div>
+          <div>
+            <span class="reminder-date">Nov 1–15, 2026</span>
+            EA/ED application deadlines (most schools)
+          </div>
+        </div>
+        <div class="reminder-item">
+          <div class="reminder-icon">🏫</div>
+          <div>
+            <span class="reminder-date">January 1, 2027</span>
+            Regular Decision deadlines (most schools)
+          </div>
+        </div>
+        <div class="reminder-item">
+          <div class="reminder-icon">✅</div>
+          <div>
+            <span class="reminder-date">May 1, 2027</span>
+            National College Decision Day
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MOM'S REMINDERS -->
+    <div class="sidebar-card">
+      <div class="sidebar-card-header">🟠 Mom's Update Reminders</div>
+      <div class="sidebar-card-body">
+        <div style="font-size:12px;color:var(--text-muted);margin-bottom:10px;">When to update this planner:</div>
+        <div class="reminder-item">
+          <div class="reminder-icon">📅</div>
+          <div><span class="reminder-date">1st of every month</span>Update "Do This Now" tasks for the new month. Add new month to timeline if needed.</div>
+        </div>
+        <div class="reminder-item">
+          <div class="reminder-icon">📊</div>
+          <div><span class="reminder-date">When scores arrive</span>Update the Numbers box above with actual SAT, ACT, and GPA.</div>
+        </div>
+        <div class="reminder-item">
+          <div class="reminder-icon">🔀</div>
+          <div><span class="reminder-date">When Gap Year path clarifies</span>Update Gap Year tasks with specific program info.</div>
+        </div>
+        <div class="reminder-item">
+          <div class="reminder-icon">🏫</div>
+          <div><span class="reminder-date">When college list is set (Jul 2026)</span>Add specific school deadlines to the timeline.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TEXT TEMPLATES -->
+    <div class="sidebar-card">
+      <div class="sidebar-card-header">💬 Ready-to-Send Texts</div>
+      <div class="sidebar-card-body">
+        <div class="text-template">
+          <div class="text-to">→ Emmett</div>
+          "Hey — quick thing. Can you log into act.org today and check your score? Just screenshot it and send it to me. Takes 2 min."
+        </div>
+        <div class="text-template">
+          <div class="text-to">→ Emmett</div>
+          "Check the planner when you get a chance — lwalsh617.github.io/command-center/emmett-planner.html — your March tasks are there. Let me know when you've looked."
+        </div>
+        <div class="text-template to-mark">
+          <div class="text-to">→ Mark</div>
+          "Hey — I made a college planner for Emmett. Can you take 10 min to look it over and text me which tasks you want to own? Link: lwalsh617.github.io/command-center/emmett-planner.html"
+        </div>
+        <div class="text-template">
+          <div class="text-to">→ Emmett</div>
+          "Did you follow up with Ms. [counselor] about Boys State? She had other people you need to talk to. Can you do that today or tomorrow?"
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end sidebar -->
+</div><!-- end main -->
+
+<footer class="site-footer">
+  Emmett's College Launch Planner · Walsh Family · Updated March 2026 · <a href="command-center.html" style="color:var(--mom);text-decoration:none;">← Mom's Command Center</a>
+</footer>
+
+<script>
+  // ── COUNTDOWN ──
+  function updateCountdown() {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = now.getMonth(); // 0-indexed
+    const lastDay = new Date(year, month + 1, 0);
+    const daysLeft = lastDay.getDate() - now.getDate();
+    const monthName = now.toLocaleString('default', { month: 'long' });
+
+    document.getElementById('daysLeft').textContent = daysLeft;
+    document.getElementById('countdownLabel').textContent = `days left in ${monthName}`;
+
+    // urgency color
+    const badge = document.querySelector('.countdown-badge');
+    if (daysLeft <= 7) {
+      badge.style.background = '#DC2626';
+    } else if (daysLeft <= 14) {
+      badge.style.background = '#EA580C';
+    }
+  }
+  updateCountdown();
+
+  // ── TASK TOGGLE ──
+  function toggleTask(el) {
+    el.classList.toggle('done');
+    updateProgress();
+    // persist
+    const id = el.dataset.id || el.querySelector('.task-text').textContent.slice(0, 30);
+    const done = JSON.parse(localStorage.getItem('emmett-tasks') || '{}');
+    done[id] = el.classList.contains('done');
+    localStorage.setItem('emmett-tasks', JSON.stringify(done));
+  }
+
+  function updateProgress() {
+    const tasks = document.querySelectorAll('#taskList .task');
+    const visible = Array.from(tasks).filter(t => t.style.display !== 'none');
+    const done = visible.filter(t => t.classList.contains('done')).length;
+    const total = visible.length;
+    const pct = total ? Math.round((done / total) * 100) : 0;
+    document.getElementById('progressText').textContent = `${done} of ${total} complete`;
+    document.getElementById('progressPct').textContent = `${pct}%`;
+    document.getElementById('progressFill').style.width = pct + '%';
+  }
+
+  // ── RESTORE SAVED STATE ──
+  function restoreState() {
+    const done = JSON.parse(localStorage.getItem('emmett-tasks') || '{}');
+    document.querySelectorAll('#taskList .task').forEach(task => {
+      const id = task.querySelector('.task-text').textContent.slice(0, 30);
+      if (done[id]) task.classList.add('done');
+    });
+    updateProgress();
+  }
+  restoreState();
+
+  // ── FILTER ──
+  function filterTasks(owner, btn) {
+    document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('#taskList .task').forEach(task => {
+      if (owner === 'all' || task.dataset.owner === owner) {
+        task.style.display = '';
+      } else {
+        task.style.display = 'none';
+      }
+    });
+    updateProgress();
+  }
+
+  // ── MONTH TOGGLE ──
+  function toggleMonth(id) {
+    const block = document.getElementById(id);
+    block.classList.toggle('open');
+  }
+</script>
+</body>
+</html>
