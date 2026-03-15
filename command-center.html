@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Command Center — Week of March 15</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1a18;
+    --paper: #f5f0e8;
+    --cream: #ede8d8;
+    --rust: #c0392b;
+    --rust-light: #e8d5d3;
+    --sage: #4a6741;
+    --sage-light: #d8e4d6;
+    --gold: #b8860b;
+    --gold-light: #f0e6c0;
+    --slate: #3d4a5c;
+    --slate-light: #dde2ea;
+    --muted: #7a7060;
+    --border: #ccc4b0;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    padding: 0;
+  }
+
+  /* Subtle paper texture */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: 
+      repeating-linear-gradient(0deg, transparent, transparent 28px, rgba(0,0,0,0.018) 28px, rgba(0,0,0,0.018) 29px);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .page {
+    position: relative;
+    z-index: 1;
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+  }
+
+  /* Header */
+  .header {
+    border-bottom: 2px solid var(--ink);
+    padding-bottom: 16px;
+    margin-bottom: 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+
+  .header-left h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    font-weight: 900;
+    letter-spacing: -0.5px;
+    line-height: 1;
+  }
+
+  .header-left .week-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
+
+  .week-progress-wrap {
+    text-align: right;
+  }
+
+  .week-progress-wrap .prog-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 5px;
+  }
+
+  .progress-bar {
+    width: 140px;
+    height: 6px;
+    background: var(--border);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: var(--sage);
+    border-radius: 3px;
+    transition: width 0.5s ease;
+  }
+
+  .progress-count {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--muted);
+    margin-top: 4px;
+    text-align: right;
+  }
+
+  /* SOS Button */
+  .sos-section {
+    margin-bottom: 36px;
+  }
+
+  .sos-btn {
+    width: 100%;
+    background: var(--rust);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 18px 24px;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    transition: transform 0.1s ease, box-shadow 0.15s ease, background 0.15s ease;
+    box-shadow: 0 3px 0 #8b2222, 0 4px 12px rgba(192,57,43,0.25);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .sos-btn::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(255,255,255,0.08) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .sos-btn:hover {
+    background: #a93226;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 0 #7a1c1c, 0 6px 18px rgba(192,57,43,0.3);
+  }
+
+  .sos-btn:active {
+    transform: translateY(2px);
+    box-shadow: 0 1px 0 #8b2222, 0 2px 6px rgba(192,57,43,0.2);
+  }
+
+  .sos-icon {
+    font-size: 1.4rem;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+  }
+
+  .sos-task-card {
+    margin-top: 12px;
+    background: var(--rust-light);
+    border-left: 4px solid var(--rust);
+    border-radius: 0 6px 6px 0;
+    padding: 16px 20px;
+    display: none;
+    animation: slideIn 0.3s ease;
+  }
+
+  .sos-task-card.visible { display: block; }
+
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .sos-task-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--rust);
+    margin-bottom: 6px;
+  }
+
+  .sos-task-text {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--ink);
+    line-height: 1.4;
+  }
+
+  .sos-task-sub {
+    font-size: 0.82rem;
+    color: var(--muted);
+    margin-top: 4px;
+    font-style: italic;
+  }
+
+  .sos-dismiss {
+    margin-top: 10px;
+    background: none;
+    border: 1px solid var(--rust);
+    color: var(--rust);
+    border-radius: 4px;
+    padding: 5px 14px;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+  }
+  .sos-dismiss:hover { background: var(--rust); color: white; }
+
+  /* Daily non-negotiable */
+  .daily-strip {
+    background: var(--sage-light);
+    border: 1px solid var(--sage);
+    border-radius: 6px;
+    padding: 14px 20px;
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .daily-strip-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--sage);
+    white-space: nowrap;
+  }
+
+  .daily-tasks {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    flex: 1;
+  }
+
+  .daily-chip {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    background: white;
+    border: 1px solid var(--sage);
+    border-radius: 20px;
+    padding: 5px 12px;
+    font-size: 0.82rem;
+    cursor: pointer;
+    transition: background 0.15s;
+    user-select: none;
+  }
+
+  .daily-chip input { display: none; }
+
+  .daily-chip .chip-check {
+    width: 14px;
+    height: 14px;
+    border: 1.5px solid var(--sage);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 9px;
+    color: white;
+    background: transparent;
+    transition: background 0.15s, border-color 0.15s;
+    flex-shrink: 0;
+  }
+
+  .daily-chip.checked {
+    background: var(--sage-light);
+    text-decoration: line-through;
+    color: var(--muted);
+  }
+
+  .daily-chip.checked .chip-check {
+    background: var(--sage);
+    border-color: var(--sage);
+  }
+
+  /* Day sections */
+  .day-section {
+    margin-bottom: 28px;
+  }
+
+  .day-header {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 10px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .day-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    font-weight: 700;
+  }
+
+  .day-name.today {
+    color: var(--rust);
+  }
+
+  .day-date {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+  }
+
+  .day-badge {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    background: var(--rust);
+    color: white;
+    padding: 2px 7px;
+    border-radius: 10px;
+  }
+
+  /* Task items */
+  .task-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 9px 0;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    cursor: pointer;
+    user-select: none;
+    transition: opacity 0.2s;
+  }
+
+  .task-item:last-child { border-bottom: none; }
+
+  .task-checkbox {
+    width: 18px;
+    height: 18px;
+    border: 1.5px solid var(--border);
+    border-radius: 3px;
+    flex-shrink: 0;
+    margin-top: 1px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    color: white;
+    transition: background 0.15s, border-color 0.15s;
+    background: white;
+  }
+
+  .task-item.done .task-checkbox {
+    background: var(--sage);
+    border-color: var(--sage);
+  }
+
+  .task-item.done .task-text {
+    text-decoration: line-through;
+    color: var(--muted);
+  }
+
+  .task-content { flex: 1; }
+
+  .task-text {
+    font-size: 0.9rem;
+    line-height: 1.45;
+    transition: color 0.2s;
+  }
+
+  .task-role {
+    display: inline-block;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 1px 6px;
+    border-radius: 3px;
+    margin-right: 6px;
+    vertical-align: middle;
+    position: relative;
+    top: -1px;
+  }
+
+  .role-finance { background: var(--gold-light); color: var(--gold); }
+  .role-house { background: var(--slate-light); color: var(--slate); }
+  .role-mom { background: #fce8d5; color: #c0622b; }
+  .role-freelance { background: #e8d5f0; color: #6b3fa0; }
+  .role-dogs { background: var(--sage-light); color: var(--sage); }
+
+  .task-note {
+    font-size: 0.75rem;
+    color: var(--muted);
+    font-style: italic;
+    margin-top: 2px;
+  }
+
+  /* Week spans */
+  .week-span-section {
+    margin-bottom: 28px;
+  }
+
+  .week-span-header {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 10px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* Role legend */
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 28px;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.72rem;
+    color: var(--muted);
+  }
+
+  .legend-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 2px;
+  }
+
+  /* Footer note */
+  .footer-note {
+    margin-top: 40px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    text-align: center;
+  }
+
+  /* Confetti burst on complete */
+  .burst {
+    position: fixed;
+    pointer-events: none;
+    z-index: 999;
+    font-size: 1.4rem;
+    animation: burstAnim 0.8s ease forwards;
+  }
+  @keyframes burstAnim {
+    0% { transform: scale(0) translateY(0); opacity: 1; }
+    100% { transform: scale(1.5) translateY(-40px); opacity: 0; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-left">
+      <h1>Command Center</h1>
+      <div class="week-label">Week of March 15, 2026</div>
+    </div>
+    <div class="week-progress-wrap">
+      <div class="prog-label">Week progress</div>
+      <div class="progress-bar"><div class="progress-fill" id="weekProgressFill" style="width:0%"></div></div>
+      <div class="progress-count" id="weekProgressCount">0 / 0 tasks</div>
+    </div>
+  </div>
+
+  <!-- SOS Button -->
+  <div class="sos-section">
+    <button class="sos-btn" onclick="triggerSOS()">
+      <span class="sos-icon">🚨</span>
+      SOS — Give me ONE thing to do right now
+    </button>
+    <div class="sos-task-card" id="sosCard">
+      <div class="sos-task-label">Your one thing</div>
+      <div class="sos-task-text" id="sosTaskText"></div>
+      <div class="sos-task-sub" id="sosTaskSub"></div>
+      <button class="sos-dismiss" onclick="dismissSOS()">Done / Not now →</button>
+    </div>
+  </div>
+
+  <!-- Daily Non-Negotiable -->
+  <div class="daily-strip">
+    <div class="daily-strip-label">Daily</div>
+    <div class="daily-tasks">
+      <label class="daily-chip" id="chip-dogs">
+        <span class="chip-check" id="check-dogs"></span>
+        🐕 Dogs: woods outing
+      </label>
+    </div>
+  </div>
+
+  <!-- Legend -->
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:#f0e6c0;border:1px solid #b8860b"></div> Finance</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#dde2ea;border:1px solid #3d4a5c"></div> House</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#fce8d5;border:1px solid #c0622b"></div> Mom</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#e8d5f0;border:1px solid #6b3fa0"></div> Freelance</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#d8e4d6;border:1px solid #4a6741"></div> Dogs</div>
+  </div>
+
+  <!-- SUNDAY -->
+  <div class="day-section">
+    <div class="day-header">
+      <span class="day-name today">Sunday</span>
+      <span class="day-date">Mar 15</span>
+      <span class="day-badge">Today</span>
+    </div>
+    <div class="task-item" onclick="toggleTask(this)">
+      <div class="task-checkbox">✓</div>
+      <div class="task-content">
+        <div class="task-text"><span class="task-role role-mom">Mom</span>Find the college planning list — 10 min max, then stop looking</div>
+      </div>
+    </div>
+    <div class="task-item" onclick="toggleTask(this)">
+      <div class="task-checkbox">✓</div>
+      <div class="task-content">
+        <div class="task-text"><span class="task-role role-finance">Finance</span>Gather tax docs into one pile — even just physical papers in one place</div>
+        <div class="task-note">You don't have to organize them. Just pile them.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MONDAY -->
+  <div class="day-section">
+    <div class="day-header">
+      <span class="day-name">Monday</span>
+      <span class="day-date">Mar 16</span>
+    </div>
+    <div class="task-item" onclick="toggleTask(this)">
+      <div class="task-checkbox">✓</div>
+      <div class="task-content">
+        <div class="task-text"><span class="task-role role-freelance">Freelance</span>KPMG kickoff — leave the call knowing: brief, angle, due date</div>
+      </div>
+    </div>
+    <div class="task-item" onclick="toggleTask(this)">
+      <div class="task-checkbox">✓</div>
+      <div class="task-content">
+        <div class="task-text"><span class="task-role role-freelance">Freelance</span>Review existing KPMG material — note what you have, what's missing</div>
+      </div>
+    </div>
+    <div class="task-item" onclick="toggleTask(this)">
+      <div class="task-checkbox">✓</div>
+      <div class="task-content">
+        <div class="task-text"><span class="task-role role-mom">Mom</span>College list: update, print, put on kitchen door</div>
+        <div class="task-note">If you couldn't find it Sunday: 20 min to rebuild. Don't perfect it — just get it on the door.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TUESDAY -->
+  <div class="day-section">
+    <div class="day-header">
+      <span class="day-name">Tuesday</span>
+      <span class="day-date">Mar 17</span>
+    </div>
+    <div class="task-item" onclick="toggleTask(this)">
+      <div class="task-checkbox">✓</div>
+      <div class="task-content">
+        <div class="task-text"><span class="task-role role-finance">Finance</span>Finish gathering tax docs — send to accountant today or tomorrow</div>
+      </div>
+    </div>
+    <div class="task-item" onclick="toggleTask(this)">
+      <div class="task-checkbox">✓</div>
+      <div class="task-content">
+        <div class="task-text"><span class="task-role role-freelance">Freelance</span>Cynthia presentation — finish and send</div>
+        <div class="task-note">Wednesday you want this gone from your brain. Today is the day.</div>
+      </div>
+    </div>
+    <div class="task-item" onclick="toggleTask(this)">
+      <div class="task-checkbox">✓</div>
+      <div class="task-content">
+        <div class="task-text"><span class="task-role role-freelance">Freelance</span>KPMG script — first draft</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WEDNESDAY -->
+  <div class="day-section">
+    <div class="day-header">
+      <span class="day-name">Wednesday</span>
+      <span class="day-date">Mar 18</span>
+    </div>
+    <div class="task-item" onclick="toggleTask(this)">
+      <div class="task-checkbox">✓</div>
+      <div class="task-content">
+        <div class="task-text"><span class="task-role role-finance">Finance</span>Tax docs to accountant (if not done Tuesday)</div>
+      </div>
+    </div>
+    <div class="task-item" onclick="toggleTask(this)">
+      <div class="task-checkbox">✓</div>
+      <div class="task-content">
+        <div class="task-text"><span class="task-role role-freelance">Freelance</span>KPMG script — revise</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- THURSDAY -->
+  <div class="day-section">
+    <div class="day-header">
+      <span class="day-name">Thursday</span>
+      <span class="day-date">Mar 19</span>
+    </div>
+    <div class="task-item" onclick="toggleTask(this)">
+      <div class="task-checkbox">✓</div>
+      <div class="task-content">
+        <div class="task-text"><span class="task-role role-freelance">Freelance</span>KPMG script — final polish and send</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ANY DAY THIS WEEK -->
+  <div class="week-span-section">
+    <div class="week-span-header">Any day this week — one session</div>
+    <div class="task-item" onclick="toggleTask(this)">
+      <div class="task-checkbox">✓</div>
+      <div class="task-content">
+        <div class="task-text"><span class="task-role role-house">House</span>Clutter reset: pick ONE room. Trash bag + donation bin + undecided bin. Go.</div>
+        <div class="task-note">Not the whole house. One room. That's the whole task.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-note">
+    Rebuilt each Sunday. Powered by Claude. You've got this.
+  </div>
+
+</div>
+
+<script>
+  // SOS tasks pool
+  const sosTasks = [
+    // Real week tasks (small/startable)
+    { text: "Go pile your tax documents.", sub: "Don't sort them. Just put them in one place. 5 minutes.", domain: "Finance" },
+    { text: "Spend 10 minutes looking for the college planning list.", sub: "Set a timer. If you don't find it, stop. Rebuild Monday.", domain: "Mom" },
+    { text: "Open the Cynthia presentation. Read just the first slide.", sub: "You don't have to write anything. Just open it.", domain: "Freelance" },
+    { text: "Grab a trash bag and walk one loop through your house.", sub: "Throw away obvious junk only. One bag. One loop.", domain: "House" },
+    // Resets
+    { text: "Drink a full glass of water right now.", sub: "Stand up to get it. That counts as movement.", domain: "Body reset" },
+    { text: "Do 10 slow shoulder rolls and 3 deep breaths.", sub: "That's the whole thing.", domain: "Body reset" },
+    { text: "Put on your shoes and take the dogs outside for 10 minutes.", sub: "Doesn't have to be the full woods outing. Just move.", domain: "Dogs" },
+    { text: "Wash three dishes.", sub: "Not all of them. Three.", domain: "House" },
+    { text: "Text one person back that you've been avoiding.", sub: "Short is fine. Existing is fine.", domain: "Connection" },
+    { text: "Walk to another room and back. Look out a window.", sub: "Your brain needs a reset, not a task. This is it.", domain: "Body reset" },
+    { text: "Write down the ONE thing making you most anxious right now.", sub: "Don't solve it. Just name it. Paper or phone.", domain: "Brain dump" },
+    { text: "Set a 15-minute timer and work on the Cynthia presentation.", sub: "Stop when it goes off. You only have to start.", domain: "Freelance" },
+  ];
+
+  let lastSOSIndex = -1;
+
+  function triggerSOS() {
+    let idx;
+    do { idx = Math.floor(Math.random() * sosTasks.length); } while (idx === lastSOSIndex);
+    lastSOSIndex = idx;
+    const task = sosTasks[idx];
+    document.getElementById('sosTaskText').textContent = task.text;
+    document.getElementById('sosTaskSub').textContent = task.sub + ' [' + task.domain + ']';
+    const card = document.getElementById('sosCard');
+    card.classList.remove('visible');
+    void card.offsetWidth;
+    card.classList.add('visible');
+  }
+
+  function dismissSOS() {
+    document.getElementById('sosCard').classList.remove('visible');
+  }
+
+  // Task toggle
+  function toggleTask(el) {
+    el.classList.toggle('done');
+    const cb = el.querySelector('.task-checkbox');
+    cb.textContent = el.classList.contains('done') ? '✓' : '';
+    if (el.classList.contains('done')) spawnBurst(el);
+    updateProgress();
+  }
+
+  // Daily chip toggle
+  document.getElementById('chip-dogs').addEventListener('click', function() {
+    this.classList.toggle('checked');
+    const check = document.getElementById('check-dogs');
+    check.textContent = this.classList.contains('checked') ? '✓' : '';
+  });
+
+  // Progress
+  function updateProgress() {
+    const all = document.querySelectorAll('.task-item');
+    const done = document.querySelectorAll('.task-item.done');
+    const pct = all.length ? (done.length / all.length * 100) : 0;
+    document.getElementById('weekProgressFill').style.width = pct + '%';
+    document.getElementById('weekProgressCount').textContent = done.length + ' / ' + all.length + ' tasks';
+  }
+
+  // Burst animation
+  function spawnBurst(el) {
+    const emojis = ['✨','⭐','🎯','✅','💪'];
+    const burst = document.createElement('div');
+    burst.className = 'burst';
+    burst.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+    const rect = el.getBoundingClientRect();
+    burst.style.left = (rect.left + 10) + 'px';
+    burst.style.top = (rect.top + window.scrollY) + 'px';
+    document.body.appendChild(burst);
+    setTimeout(() => burst.remove(), 900);
+  }
+
+  updateProgress();
+</script>
+</body>
+</html>
