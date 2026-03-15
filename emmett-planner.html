@@ -601,11 +601,10 @@
 
       <div class="now-tasks" id="taskList">
 
-        <div class="task owner-emmett" data-owner="emmett" onclick="toggleTask(this)">
+          <div class="task owner-emmett done" data-owner="emmett" onclick="toggleTask(this)">
           <div class="task-checkbox"></div>
           <div class="task-owner" style="background:var(--emmett)"></div>
-          <div class="task-text"><strong>Log in and check ACT score today.</strong> Go to act.org → My ACT → scores. Screenshot it and text to Mom.</div>
-          <div class="task-urgent">TODAY</div>
+          <div class="task-text"><strong>ACT score: 30 composite</strong> — Reading 36, Math 30, English 25. No prep, no 504. ✅ Done.</div>
         </div>
 
         <div class="task owner-emmett" data-owner="emmett" onclick="toggleTask(this)">
@@ -621,17 +620,23 @@
           <div class="task-text">Check your email and <strong>look for guidance counselor's reply</strong> about Boys State — it's been a week. Then act on it same day.</div>
         </div>
 
-        <div class="task owner-mom" data-owner="mom" onclick="toggleTask(this)">
+        <div class="task owner-mom done" data-owner="mom" onclick="toggleTask(this)">
           <div class="task-checkbox"></div>
           <div class="task-owner" style="background:var(--mom)"></div>
-          <div class="task-text"><strong>Pull Emmett's current GPA</strong> from school portal. Note it somewhere in this planner. We need to know what we're working with.</div>
-          <div class="task-urgent">THIS WEEK</div>
+          <div class="task-text"><strong>GPA confirmed:</strong> 2.97 cumulative unweighted. Trend: 2.40 (9th) → 3.35 (10th) → 3.33 so far (11th). Stabilized. ✅ Done.</div>
         </div>
 
         <div class="task owner-mom" data-owner="mom" onclick="toggleTask(this)">
           <div class="task-checkbox"></div>
           <div class="task-owner" style="background:var(--mom)"></div>
-          <div class="task-text"><strong>Once ACT score is in:</strong> compare SAT PSAT (1430) vs ACT. Decide which test to prioritize for retakes. (SAT 2nd attempt: June 6 · ACT 2nd attempt: July 11)</div>
+          <div class="task-text"><strong>Start ACT accommodation request NOW.</strong> SAT/College Board is handled — ACT is separate and not yet done. Email sent to guidance counselor 3/15. Follow up until it's submitted. ACT approval takes 6–8 weeks — must be done before July 11 registration (June 5).</div>
+          <div class="task-urgent">URGENT</div>
+        </div>
+
+        <div class="task owner-mom" data-owner="mom" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-owner" style="background:var(--mom)"></div>
+          <div class="task-text"><strong>ACT retake strategy:</strong> Target July 11 (reg by June 5). Focus: English section (pacing issue — extra time should fix it). Superscore means only retake English + optionally Math. Target composite: 33–34. SAT 2nd attempt June 6 — compare both scores before deciding primary test.</div>
         </div>
 
         <div class="task owner-mark" data-owner="mark" onclick="toggleTask(this)">
@@ -696,9 +701,9 @@
         <div class="month-content">
           <div class="lane-section">
             <div class="lane-title lane-test">🎯 Test Prep</div>
-            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--emmett)"></div>Get ACT score (act.org) — assess vs PSAT 1430</div>
-            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--emmett)"></div>SAT taken 3/14 — score released by 3/28</div>
-            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--mom)"></div>Compare both scores, decide retake strategy</div>
+            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--emmett)"></div>✅ ACT score confirmed: 30 composite — Reading 36, Math 30, English 25 (no prep, no 504)</div>
+            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--emmett)"></div>SAT taken 3/14 — score released by 3/28. Compare to ACT.</div>
+            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--mom)"></div>⚠️ Start ACT accommodation request — email sent 3/15 to guidance counselor. Follow up.</div>
             <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--emmett)"></div>Start Khan Academy SAT prep habit (2x/week, 20 min)</div>
           </div>
           <div class="lane-section">
@@ -733,9 +738,9 @@
         <div class="month-content">
           <div class="lane-section">
             <div class="lane-title lane-test">🎯 Test Prep</div>
-            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--mom)"></div>Decide: retake SAT (June 6, reg by May 22) and/or ACT (July 11)?</div>
-            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--emmett)"></div>Continue 2x/week test prep habit</div>
-            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--mom)"></div>Confirm 504 accommodations are approved for SAT + ACT</div>
+            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--mom)"></div>Decide: retake SAT June 6 (reg by May 22) — yes, plan on it</div>
+            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--emmett)"></div>Continue 2x/week test prep — focus on SAT Math + English pacing</div>
+            <div class="timeline-task"><div class="timeline-task-dot" style="background:var(--mom)"></div>⚠️ Confirm ACT accommodation approval received — SAT/College Board is done, ACT is separate. Must be approved before June 5 registration for July 11 test.</div>
           </div>
           <div class="lane-section">
             <div class="lane-title lane-college">🏫 College Research</div>
@@ -1100,15 +1105,17 @@
           </div>
           <div class="score-box">
             <div class="score-box-label">ACT</div>
-            <div class="score-box-value pending">⚠️ Check<br>Today</div>
+            <div class="score-box-value">30</div>
+            <div class="score-box-sub">No prep · No 504 · Math 30 · Eng 25 · Reading 36</div>
           </div>
           <div class="score-box">
             <div class="score-box-label">GPA</div>
-            <div class="score-box-value pending">Pull from<br>portal</div>
+            <div class="score-box-value">2.97</div>
+            <div class="score-box-sub">Unweighted cumulative · 11th grade: 3.33 so far</div>
           </div>
         </div>
         <div style="margin-top:12px;font-size:12px;color:var(--text-muted);line-height:1.5;">
-          💡 1430 PSAT with zero prep + 504 time = strong foundation. Realistic SAT target with prep: <strong>1500+</strong>
+          💡 <strong>ACT: 30 composite, zero prep, no 504.</strong> Reading 36 = 99th percentile. English 25 = pacing issue, not knowledge — extra time next attempt should jump it significantly. Superscore means only English retake needed. Target with prep + 504: <strong>33–34.</strong> GPA trend: 2.40 (9th) → 3.35 (10th) → 3.33 so far (11th) = stabilized and holding. Cumulative 2.97 unweighted. SAT score due ~3/28.
         </div>
       </div>
     </div>
@@ -1117,6 +1124,13 @@
     <div class="sidebar-card">
       <div class="sidebar-card-header">⚠️ Hard Deadlines</div>
       <div class="sidebar-card-body">
+        <div class="reminder-item">
+          <div class="reminder-icon">⚠️</div>
+          <div>
+            <span class="reminder-date">ASAP — before April</span>
+            ACT accommodation request submitted. Email sent to counselor 3/15 — follow up until confirmed.
+          </div>
+        </div>
         <div class="reminder-item">
           <div class="reminder-icon">📝</div>
           <div>
